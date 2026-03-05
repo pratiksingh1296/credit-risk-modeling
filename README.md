@@ -47,7 +47,7 @@ Key objectives:
 
 ## Project Structure
 ```
-credit-risk-ml/
+credit-risk-modeling/
 │
 ├── README.md      
 ├── requirements.txt       
@@ -251,6 +251,7 @@ Focus areas:
 pip install -r requirements.txt
 
 ```
+
 
 
 
