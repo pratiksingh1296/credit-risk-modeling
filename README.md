@@ -48,37 +48,35 @@ Key objectives:
 ## Project Structure
 credit-risk-ml/
 │
-├── data/
-│ ├── raw/
-│ └── processed/
+├── README.md
+├── requirements.txt
 │
 ├── notebooks/
-│ ├── 01_eda.ipynb
-│ ├── 02_feature_engineering.ipynb
-│ ├── 03_modeling_baseline.ipynb
-│ ├── 04_uncertainty_calibration.ipynb
-│ ├── 05_business_decisions.ipynb
-│ └── 06_explainability_shap.ipynb
+│   ├── 01_eda.ipynb
+│   ├── 02_feature_engineering.ipynb
+│   ├── 03_modeling_baseline.ipynb
+│   ├── 04_uncertainty_calibration.ipynb
+│   ├── 05_business_decisions.ipynb
+│   └── 06_explainability_shap.ipynb
 │
 ├── src/
-│ ├── data_prep.py
-│ ├── features.py
-│ ├── train.py
-│ ├── evaluate.py
-│ ├── uncertainty.py
-│ └── explainability.py
-│
-├── models/
-│ ├── logreg_baseline.joblib
-│ ├── logreg_platt.joblib
-│ └──  preprocessor_fit.joblib
+│   ├── data_prep.py
+│   ├── features.py
+│   ├── train.py
+│   ├── evaluate.py
+│   ├── uncertainty.py
+│   └── explainability.py
 │
 ├── reports/
-│ └── figures/
-| └── summary_tables
+│   ├── figures/
+│   └── summary_tables/
 │
-└── README.md
-└── requirements.txt
+├── models/
+│
+└── data/
+    ├── raw/
+    └── processed/
+
 
 
 ---
@@ -243,4 +241,5 @@ Built as a portfolio project to demonstrate **end-to-end applied data science**,
 ## Setup
 ```bash
 pip install -r requirements.txt
+
 ```
