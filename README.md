@@ -49,10 +49,10 @@ Key objectives:
 ```
 credit-risk-ml/
 │
-├── README.md       # Project documentation
-├── requirements.txt       # Python dependencies
+├── README.md      
+├── requirements.txt       
 │
-├── notebooks/      # Jupyter notebooks for analysis and experimentation
+├── notebooks/      
 │   ├── 01_eda.ipynb
 │   ├── 02_feature_engineering.ipynb
 │   ├── 03_modeling_baseline.ipynb
@@ -60,7 +60,7 @@ credit-risk-ml/
 │   ├── 05_business_decisions.ipynb
 │   └── 06_explainability_shap.ipynb
 │
-├── src/      # Source code for training and evaluation
+├── src/    
 │   ├── data_prep.py
 │   ├── features.py
 │   ├── train.py
@@ -68,13 +68,13 @@ credit-risk-ml/
 │   ├── uncertainty.py
 │   └── explainability.py
 │
-├── reports/       # Figures and result tables
+├── reports/      
 │   ├── figures/
 │   └── summary_tables/
 │
-├── models/      # Saved trained models
+├── models/     
 │
-└── data/      # Raw and processed datasets
+└── data/      
     ├── raw/
     └── processed/
 ```
@@ -251,6 +251,7 @@ Focus areas:
 pip install -r requirements.txt
 
 ```
+
 
 
 
