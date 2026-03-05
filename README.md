@@ -77,8 +77,6 @@ credit-risk-ml/
     ├── raw/
     └── processed/
 
-
-
 ---
 
 ## Modeling Approach
@@ -224,7 +222,16 @@ This demonstrates how SHAP provides transparent, case-level explanations that al
 ---
 
 ## Author
-Built as a portfolio project to demonstrate **end-to-end applied data science**, bridging modeling, uncertainty, and business decision-making.
+
+Pratik
+
+This project was built to demonstrate applied data science workflows in risk modeling,
+including probability calibration, threshold optimization, and explainable machine learning.
+
+Focus areas:
+- probabilistic modeling
+- decision-oriented ML
+- interpretable models for regulated domains
 
 ---
 
@@ -243,3 +250,4 @@ Built as a portfolio project to demonstrate **end-to-end applied data science**,
 pip install -r requirements.txt
 
 ```
+
