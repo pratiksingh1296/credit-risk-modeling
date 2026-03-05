@@ -12,6 +12,29 @@ closely mirroring how credit risk models are used in real financial institutions
 
 ---
 
+## Modeling Pipeline
+
+```mermaid
+graph TD
+A[Raw Data] --> B[Feature Engineering]
+B --> C[Logistic Regression Model]
+C --> D[Probability Calibration]
+D --> E[Risk Bucketing]
+E --> F[SHAP Explainability]
+```
+---
+
+## Tech Stack
+
+- Python
+- Scikit-learn
+- Pandas
+- NumPy
+- SHAP
+- Matplotlib / Seaborn
+
+---
+
 ## Key Results
 ### ROC Curve
 ![ROC Curve](reports/figures/roc_disp.png)
@@ -187,24 +210,23 @@ The project illustrates how model outputs directly influence lending decisions a
 ### Global Feature Importance
 ![SHAP](reports/figures/summary_global_imp_bar.png)
 
-SHAP (SHapley Additive exPlanations) is used to:
-- Identify global drivers of default risk
-- Explain individual applicant decisions
-- Support transparency and regulatory compliance
+SHAP (SHapley Additive exPlanations) is used to interpret model predictions and
+identify the primary drivers of default risk.
 
-Key outputs:
-- Global feature importance (mean absolute SHAP)
+It enables:
+- Global interpretation of model behavior
+- Case-level explanations for individual applicants
+- Transparency for decision-making in regulated domains
+
+Key outputs include:
+- Global feature importance (mean absolute SHAP values)
 - Individual applicant explanations
-- Quantification of each feature’s contribution to individual PD
-- Consistency between SHAP risk drivers and domain expectations
-- Auditable explanation layer for regulatory transparency
-
----
-
+- Quantification of each feature’s contribution to predicted PD
+  
 ### Example: High-Risk Applicant Explanation
 
-Predicted Probability of Default (PD): 0.72  
-Risk Bucket: Very High → Reject
+**Predicted Probability of Default (PD):** 0.72  
+**Risk Bucket:** Very High → Reject
 
 Top risk-increasing drivers:
 - Low income
@@ -216,7 +238,7 @@ Top risk-reducing drivers:
 - Age
 - Stable organization type
 
-This demonstrates how SHAP provides transparent, case-level explanations that align with lending policy decisions.
+Despite some stabilizing factors, the combined impact of financial risk indicators leads to a very high predicted probability of default, resulting in rejection according to the defined lending policy.
 
 ---
 
@@ -234,6 +256,24 @@ This demonstrates how SHAP provides transparent, case-level explanations that al
 - Reject inference
 - Temporal validation
 - Policy stress testing
+
+---
+
+## How to Run
+
+1. Install dependencies
+
+pip install -r requirements.txt
+
+2. Download dataset from Kaggle
+
+https://www.kaggle.com/c/home-credit-default-risk
+
+3. Place files in:
+
+data/raw/
+
+4. Run the notebooks
 
 ---
 
@@ -266,6 +306,7 @@ Focus areas:
 pip install -r requirements.txt
 
 ```
+
 
 
 
