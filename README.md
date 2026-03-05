@@ -26,6 +26,10 @@ The model achieves moderate risk-ranking ability while maintaining calibrated pr
 - **Source:** [Home Credit Default Risk Dataset – Kaggle](https://www.kaggle.com/c/home-credit-default-risk)
 - **Target:** `TARGET` (1 = default, 0 = non-default)
 - **Data type:** Structured tabular data (numerical + categorical)
+- Dataset size:
+    ~307k training records
+    ~122 features
+    default rate ≈ 8%
 
 The raw dataset is not included in this repository due to size constraints.
 
@@ -262,6 +266,7 @@ Focus areas:
 pip install -r requirements.txt
 
 ```
+
 
 
 
