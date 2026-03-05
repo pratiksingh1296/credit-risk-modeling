@@ -46,6 +46,7 @@ Key objectives:
 ---
 
 ## Project Structure
+```
 credit-risk-ml/
 │
 ├── README.md
@@ -76,7 +77,7 @@ credit-risk-ml/
 └── data/
     ├── raw/
     └── processed/
-
+```
 ---
 
 ## Modeling Approach
@@ -250,4 +251,5 @@ Focus areas:
 pip install -r requirements.txt
 
 ```
+
 
