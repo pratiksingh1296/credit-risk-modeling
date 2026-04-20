@@ -1,0 +1,5 @@
+,Model,ROC-AUC,Brier Score,ECE
+0,Logistic Regression,0.7433,0.2049,0.3462
+1,Logistic Regression (Calibrated),0.7435,0.0688,0.0018
+2,XGBoost,0.7599,0.1488,0.2521
+3,XGBoost (Calibrated),0.7631,0.0676,0.0015
