@@ -1,23 +1,30 @@
 # Credit Risk Modeling with Probability Calibration, Risk Bucketing, and SHAP Explainability
 
 ## Project Overview
-This project builds an end-to-end **credit risk modeling pipeline** focused on:
-- Predicting probability of default (PD)
-- Calibrating model probabilities
-- Translating predictions into business decisions
-- Explaining decisions using SHAP
+This project demonstrates an end-to-end Credit Risk Pipeline that moves beyond simple classification. It focuses on producing well-calibrated probabilities of default (PD) and translating them into actionable business risk buckets
 
 Rather than optimizing for accuracy alone, the project emphasizes **risk ranking, uncertainty awareness, and explainability**, 
 closely mirroring how credit risk models are used in real financial institutions.
 
 ---
 
+## Key Highlights
+
+- Calibration: Reduced ECE from 0.346 → 0.001 across both Logistic Regression and XGBoost using Platt Scaling — a 99.7% improvement in probability reliability.
+- Decisioning: Developed a 4-tier Risk Bucketing framework (Low to Very High) to automate lending decisions.
+- Explainability: Integrated SHAP to provide "Reason Codes" for loan denials, satisfying regulatory transparency requirements.
+
+---
+
 ## Key Results
-### ROC Curve
+
+### ROC Curve 
 ![ROC Curve](reports/figures/roc_disp.png)
+![ROC Curve XGB](reports/figures/roc_disp_xgb.png)
 
 ### Global SHAP Feature Importance
-![SHAP](reports/figures/summary_global_imp_bar.png)
+![SHAP](reports/figures/shap_feature_importance_bee.png)
+![SHAP](reports/figures/shap_xgb_feature_importance_bee.png)
 
 ---
 
@@ -34,17 +41,6 @@ closely mirroring how credit risk models are used in real financial institutions
 
 ---
 
-## Problem Statement
-Given applicant-level financial and demographic data, predict the probability that a loan applicant will default and translate that risk into actionable credit decisions.
-
-Key objectives:
-- Produce **well-calibrated probabilities**, not just class labels
-- Rank applicants by risk
-- Create interpretable risk buckets
-- Justify decisions using model explainability
-
----
-
 ## Project Structure
 credit-risk-ml/
 │
@@ -58,7 +54,8 @@ credit-risk-ml/
 │ ├── 03_modeling_baseline.ipynb
 │ ├── 04_uncertainty_calibration.ipynb
 │ ├── 05_business_decisions.ipynb
-│ └── 06_explainability_shap.ipynb
+│ ├── 06_explainability_shap.ipynb
+│ └── 07_xgb_modeling.ipynb
 │
 ├── src/
 │ ├── data_prep.py
@@ -71,6 +68,8 @@ credit-risk-ml/
 ├── models/
 │ ├── logreg_baseline.joblib
 │ ├── logreg_platt.joblib
+│ ├── xgb_model.joblib
+│ ├── xgb_calibrated.joblib
 │ └──  preprocessor_fit.joblib
 │
 ├── reports/
@@ -85,68 +84,47 @@ credit-risk-ml/
 
 ## Modeling Approach
 
-### Baseline Model
-- Logistic Regression
-- Class-weighted to handle imbalance
-- Pipeline with preprocessing
+### Models
+- Logistic Regression (baseline, class-weighted to handle imbalance)
+- XGBoost (final model for improved non-linear learning and ranking performance)
 
 ### Evaluation Metrics
 - ROC-AUC (risk ranking)
 - Precision / Recall
-- Confusion Matrix
-- Probability distributions
-
----
-
-## Model Performance Summary
-
-| Metric | Baseline Logistic | Calibrated (Platt) |
-|--------|-------------------|--------------------|
-| ROC-AUC | 0.74 | 0.74 |
-| Brier Score | 0.198 | 0.182 |
-| ECE | 0.041 | 0.004 |
-
-The baseline logistic regression achieved an ROC-AUC of 0.74, indicating moderate
-risk-ranking ability.
-### ROC Curve (Baseline)
-![ROC](reports/figures/roc_disp.png)
-### Precision-Recall Curve (Baseline)
-![PR](reports/figures/precision_recall_disp.png)
-
-Calibration reduced Brier Score and ECE while ROC-AUC remained unchanged.
-
----
-
-## Probability Calibration
-To ensure predicted probabilities reflect real-world default rates:
-- **Platt Scaling**
-- **Isotonic Regression**
-
-Platt Scaling was selected after comparing calibration methods using:
-- Reliability curves
 - Expected Calibration Error (ECE)
 - Brier Score
 
-Platt Scaling provided near-zero ECE and improved probability alignment without degrading AUC.
-Calibration improved probability reliability without degrading discrimination (AUC remained stable).
+### Probability Calibration
+- Applied **Platt** Scaling and **Isotonic** Regression to Logistic Regression to align predicted probabilities with observed default rates.
+- Evaluated using reliability curves , Expected Calibration Error (ECE) and Brier Score
+- Platt Scaling provided near-zero ECE and improved probability alignment without degrading AUC. 
+- Applied sigmoid calibration with 5-fold CV to XGBoost, which improved probability alignment (↓ ECE , ↓ Brier Score) without degrading AUC.
+
+## Model Performance Summary
+
+| Metric | Logistic Regression | Logistic Regression Calibrated (Platt) | XGBoost | XGBoost Calibrated |
+|--------|-------------------|--------------------|--------------------|--------------------|
+| ROC-AUC | 0.743 | 0.743 | 0.760 | 0.763 |
+| Brier Score | 0.204 | 0.068 | 0.149 | 0.067|
+| ECE | 0.346 | 0.001 | 0.252 | 0.001|
+
+Calibration dramatically improved probability reliability (ECE 0.252 → 0.001) without degrading discrimination (AUC 0.760 → 0.763), confirming XGBoost Calibrated as the superior model for production lending decisions.
+
+### ROC Curve (Baseline)
+![ROC](reports/figures/roc_disp.png)
+![ROC Curve XGB](reports/figures/roc_disp_xgb.png)
+![ROC Curve XGB Calibrated](reports/figures/roc_disp_xgb_cal.png)
+
+### Precision-Recall Curve (Baseline)
+![PR](reports/figures/pr_disp.png)
+![PR](reports/figures/pr_disp_xgb.png)
+![PR](reports/figures/pr_disp_xgb_cal.png)
 
 ---
 
-## Threshold Analysis
+## Business Logic: Risk Bucketing
 
-Before defining risk buckets, the model's performance across probability thresholds was analyzed to understand trade-offs between approval rate,
-false positives, and missed defaults.
-
-![Threshold](reports/figures/optimal_threshold_CM.png)
-
-This analysis illustrates how decision thresholds influence portfolio risk
-and approval rates. However, rather than relying on a single cutoff, the
-final decision framework uses multiple risk buckets aligned with lending policy.
-
----
-
-## Risk Bucketing & Decisions
-Predicted PDs are converted into risk buckets aligned with business policy:
+Predictions are mapped to specific lending actions. This allows the business to automate low-risk loans while flagging high-risk cases for manual review.
 
 | Risk Bucket | PD Range | Decision |
 |------------|---------|----------|
@@ -154,8 +132,6 @@ Predicted PDs are converted into risk buckets aligned with business policy:
 | Medium     | 5–16%    | Approve with conditions |
 | High       | 16–45%   | Manual review |
 | Very High  | > 45%    | Reject |
-
-This allows graded decision-making rather than binary classification.
 
 ---
 
@@ -169,10 +145,11 @@ The project illustrates how model outputs directly influence lending decisions a
 
 ---
 
-## Explainability with SHAP
+## Explainability (SHAP)
 
 ### Global Feature Importance
-![SHAP](reports/figures/summary_global_imp_bar.png)
+![SHAP](reports/figures/shap_feature_importance.png)
+![SHAP](reports/figures/shap_xgb_feature_importance.png)
 
 SHAP (SHapley Additive exPlanations) is used to:
 - Identify global drivers of default risk
@@ -190,20 +167,19 @@ Key outputs:
 
 ### Example: High-Risk Applicant Explanation
 
-Predicted Probability of Default (PD): 0.72  
-Risk Bucket: Very High → Reject
+Predicted Probability of Default (PD): 0.407
+Risk Bucket: High → Manual Review
+Actual Outcome: Default ✓ (model correct)
 
 Top risk-increasing drivers:
-- Low income
-- Short employment history
-- High external risk score
-- Previous late payments
+- High debt-to-credit ratio (DS_CREDIT_RATIO)
+- Low external credit scores (EXT_SOURCE_2, EXT_SOURCE_3)
+- Applicant registered in different city than residence
+- High-risk organisation type (ORG_RISK — engineered feature)
 
 Top risk-reducing drivers:
-- Age
-- Stable organization type
-
-This demonstrates how SHAP provides transparent, case-level explanations that align with lending policy decisions.
+- Document verification days (DAYS_ID_PUBLISH)
+- Goods price (AMT_GOODS_PRICE)
 
 ---
 
@@ -216,7 +192,7 @@ This demonstrates how SHAP provides transparent, case-level explanations that al
 ---
 
 ## Future Improvements
-- Tree-based models (GBM / XGBoost) with monotonic constraints
+- Monotonic constraints on XGBoost for regulatory compliance
 - Cost-sensitive optimization
 - Reject inference
 - Temporal validation
