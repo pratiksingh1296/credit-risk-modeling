@@ -124,13 +124,13 @@ Calibration dramatically improved probability reliability (ECE 0.252 → 0.001) 
 
 ### ROC Curve (Baseline)
 ![ROC](reports/figures/roc_disp.png)
+### ROC Curve (XGBoost)
 ![ROC Curve XGB](reports/figures/roc_disp_xgb.png)
-![ROC Curve XGB Calibrated](reports/figures/roc_disp_xgb_cal.png)
 
 ### Precision-Recall Curve (Baseline)
 ![PR](reports/figures/pr_disp.png)
+### Precision-Recall Curve (XGBoost)
 ![PR](reports/figures/pr_disp_xgb.png)
-![PR](reports/figures/pr_disp_xgb_cal.png)
 
 ---
 
