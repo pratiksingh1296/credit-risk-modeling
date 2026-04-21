@@ -19,11 +19,17 @@ closely mirroring how credit risk models are used in real financial institutions
 ## Key Results
 
 ### ROC Curve 
+
+#### ROC Curve - Logistic Regression
 ![ROC Curve](reports/figures/roc_disp.png)
+#### ROC Curve - XGBoost
 ![ROC Curve XGB](reports/figures/roc_disp_xgb.png)
 
 ### Global SHAP Feature Importance
+
+#### Feature Importance - Logistic Regression
 ![SHAP](reports/figures/shap_feature_importance_bee.png)
+#### Feature Importance - XGBoost
 ![SHAP](reports/figures/shap_xgb_feature_importance_bee.png)
 
 ---
@@ -42,6 +48,7 @@ closely mirroring how credit risk models are used in real financial institutions
 ---
 
 ## Project Structure
+```
 credit-risk-ml/
 │
 ├── data/
@@ -78,7 +85,12 @@ credit-risk-ml/
 │
 └── README.md
 └── requirements.txt
+```
 
+### Note on src/ directory
+The `src/` directory contains modular versions of the pipeline functions. 
+Scripts are works in progress and the primary reproducible workflow 
+is through the numbered notebooks in `notebooks/`.
 
 ---
 
@@ -148,7 +160,10 @@ The project illustrates how model outputs directly influence lending decisions a
 ## Explainability (SHAP)
 
 ### Global Feature Importance
+
+#### Logistic Regression
 ![SHAP](reports/figures/shap_feature_importance.png)
+#### XGBoost
 ![SHAP](reports/figures/shap_xgb_feature_importance.png)
 
 SHAP (SHapley Additive exPlanations) is used to:
