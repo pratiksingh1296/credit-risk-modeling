@@ -1,5 +1,8 @@
 # Credit Risk Modeling with Probability Calibration, Risk Bucketing, and SHAP Explainability
 
+## 🚀 Live Demo
+👉 [Try the Credit Risk Predictor](https://credit-risk-default-predictor.streamlit.app/)
+
 ## Project Overview
 This project demonstrates an end-to-end Credit Risk Pipeline that moves beyond simple classification. It focuses on producing well-calibrated probabilities of default (PD) and translating them into actionable business risk buckets
 
