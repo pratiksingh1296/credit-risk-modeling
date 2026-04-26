@@ -76,3 +76,27 @@ if st.button("Predict Risk"):
 
     # Risk Gauge
     st.progress(float(prob))
+
+    st.markdown("### Why this prediction?")
+    explainer = shap.TreeExplainer(joblib.load("models/xgb_model.joblib"))
+
+    # get feature names from preprocessor
+    feature_names = preprocessor.get_feature_names_out()
+    clean_names = [name.split('__')[1] for name in feature_names]
+
+    input_df_shap = pd.DataFrame(input_processed, columns=clean_names)
+    shap_values = explainer.shap_values(input_df_shap)
+    
+    st.caption("The waterfall chart shows which factors most influenced this applicant's default probability. Red bars increase risk, blue bars decrease it.")
+
+    fig , ax = plt.subplots(figsize=(10,5))
+    shap.plots.waterfall(
+            shap.Explanation(
+                values=shap_values[0],
+                base_values=explainer.expected_value,
+                feature_names=clean_names
+            ),
+        show=False
+        )
+    st.pyplot(fig)
+    plt.close()
