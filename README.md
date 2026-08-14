@@ -6,16 +6,16 @@
 ## Project Overview
 This project demonstrates an end-to-end Credit Risk Pipeline that moves beyond simple classification. It focuses on producing well-calibrated probabilities of default (PD) and translating them into actionable business risk buckets
 
-Rather than optimizing for accuracy alone, the project emphasizes **risk ranking, uncertainty awareness, and explainability**, 
+Rather than optimizing for accuracy alone, the project emphasizes **risk ranking, probability calibration, and explainability**, 
 closely mirroring how credit risk models are used in real financial institutions.
 
 ---
 
 ## Key Highlights
 
-- Calibration: Reduced ECE from 0.346 → 0.001 across both Logistic Regression and XGBoost using Platt Scaling — a 99.7% improvement in probability reliability.
+- Calibration: Reduced XGBoost ECE from approximately 0.253 to 0.0026 on the held-out test set using Platt scaling, while slightly improving ROC-AUC from 0.760 to 0.763.
 - Decisioning: Developed a 4-tier Risk Bucketing framework (Low to Very High) to automate lending decisions.
-- Explainability: Integrated SHAP to provide "Reason Codes" for loan denials, satisfying regulatory transparency requirements.
+- Explainability: SHAP provides global and applicant-level explanations that can support model transparency and reason-code generation.
 
 ---
 
@@ -73,14 +73,17 @@ credit-risk-ml/
 │ ├── train.py
 │ ├── evaluate.py
 │ ├── uncertainty.py
+│ ├── train_xgb.py
 │ └── explainability.py
+│
 │
 ├── models/
 │ ├── logreg_baseline.joblib
 │ ├── logreg_platt.joblib
+│ ├── logreg_iso.joblib
 │ ├── xgb_model.joblib
 │ ├── xgb_calibrated.joblib
-│ └──  preprocessor_fit.joblib
+│ └── preprocessor_fit.joblib
 │
 ├── reports/
 │ └── figures/
@@ -111,19 +114,19 @@ is through the numbered notebooks in `notebooks/`.
 
 ### Probability Calibration
 - Applied **Platt** Scaling and **Isotonic** Regression to Logistic Regression to align predicted probabilities with observed default rates.
-- Evaluated using reliability curves , Expected Calibration Error (ECE) and Brier Score
-- Platt Scaling provided near-zero ECE and improved probability alignment without degrading AUC. 
+- Evaluated using reliability curves, Expected Calibration Error (ECE) and Brier Score
+- Platt scaling and isotonic regression were evaluated on the validation set. XGBoost with Platt scaling provided the strongest combination of discrimination and probability calibration and was selected as the final model.
 - Applied sigmoid calibration with 5-fold CV to XGBoost, which improved probability alignment (↓ ECE , ↓ Brier Score) without degrading AUC.
 
 ## Model Performance Summary
 
-| Metric | Logistic Regression | Logistic Regression Calibrated (Platt) | XGBoost | XGBoost Calibrated |
+| Metric | Logistic Regression | Logistic Regression Calibrated (Isotonic) | XGBoost | XGBoost Calibrated (Platt) |
 |--------|-------------------|--------------------|--------------------|--------------------|
-| ROC-AUC | 0.743 | 0.743 | 0.760 | 0.763 |
+| ROC-AUC | 0.746 | 0.750 | 0.760 | 0.763 |
 | Brier Score | 0.204 | 0.068 | 0.149 | 0.067|
-| ECE | 0.346 | 0.001 | 0.252 | 0.001|
+| ECE | 0.3410 | 0.0026 | 0.2528 | 0.0025|
 
-Calibration dramatically improved probability reliability (ECE 0.252 → 0.001) without degrading discrimination (AUC 0.760 → 0.763), confirming XGBoost Calibrated as the superior model for production lending decisions.
+XGBoost with Platt calibration was selected as the final model based on validation performance and subsequently evaluated once on the held-out test set.
 
 ### ROC Curve (Baseline)
 ![ROC](reports/figures/roc_disp.png)
@@ -146,7 +149,7 @@ Predictions are mapped to specific lending actions. This allows the business to 
 | Low        | < 5%     | Auto-approve |
 | Medium     | 5–16%    | Approve with conditions |
 | High       | 16–45%   | Manual review |
-| Very High  | > 45%    | Reject |
+| Very High  | >= 45%    | Reject |
 
 ---
 
@@ -180,24 +183,6 @@ Key outputs:
 - Quantification of each feature’s contribution to individual PD
 - Consistency between SHAP risk drivers and domain expectations
 - Auditable explanation layer for regulatory transparency
-
----
-
-### Example: High-Risk Applicant Explanation
-
-Predicted Probability of Default (PD): 0.407
-Risk Bucket: High → Manual Review
-Actual Outcome: Default ✓ (model correct)
-
-Top risk-increasing drivers:
-- High debt-to-credit ratio (DS_CREDIT_RATIO)
-- Low external credit scores (EXT_SOURCE_2, EXT_SOURCE_3)
-- Applicant registered in different city than residence
-- High-risk organisation type (ORG_RISK — engineered feature)
-
-Top risk-reducing drivers:
-- Document verification days (DAYS_ID_PUBLISH)
-- Goods price (AMT_GOODS_PRICE)
 
 ---
 
