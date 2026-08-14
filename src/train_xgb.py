@@ -1,9 +1,14 @@
 from xgboost import XGBClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.calibration import CalibratedClassifierCV
+from pathlib import Path
 import joblib
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+MODEL_DIR = PROJECT_ROOT / "models"
+
 def build_xgb_pipeline(preprocessor):
+
     xgb_model = XGBClassifier(
         n_estimators=500,
         max_depth=6,
@@ -24,6 +29,7 @@ def build_xgb_pipeline(preprocessor):
     
     return pipeline
 
+'''
 def train_and_calibrate_xgb(pipeline, X_train, y_train):
     calibrated_xgb = CalibratedClassifierCV(
         estimator=pipeline,
@@ -34,18 +40,26 @@ def train_and_calibrate_xgb(pipeline, X_train, y_train):
     print("Training and Calibrating XGBoost (this may take a while)...")
     calibrated_xgb.fit(X_train, y_train)
     return calibrated_xgb
+'''
 
 if __name__ == "__main__":
+
+    # Load preprocessor 
+    preprocessor = joblib.load( MODEL_DIR / "preprocessor_fit.joblib")
+
+    # Load fit data
+    X_fit, y_fit = joblib.load( MODEL_DIR / "fit_data.joblib")
     
-    logreg_pipe = joblib.load("../models/logres_baseline.joblib")
-    preprocessor = logreg_pipe.named_steps['preprocess']
-    
-    X_train, y_train = joblib.load('../models/train_data.joblib')
-    
-    
+    # Build Model
     xgb_pipe = build_xgb_pipeline(preprocessor)
-    final_xgb = train_and_calibrate_xgb(xgb_pipe, X_train, y_train)
+
+    # Train
+    print("Training XGBoost...")
+    xgb_pipe.fit(X_fit, y_fit)
+
+    # final_xgb = train_and_calibrate_xgb(xgb_pipe, X_train, y_train)
     
-    # Save
-    joblib.dump(final_xgb, "../models/xgb_calibrated.joblib")
+    # Save 
+    joblib.dump(xgb_pipe, MODEL_DIR / "xgb_model.joblib")
+
     print("XGBoost Model Saved!")
