@@ -5,7 +5,7 @@ data/processed/
 # Large model files
 models/train_data.joblib
 models/test_data.joblib
-models/val_data.joblib
+models/validation_data.joblib
 models/fit_data.joblib
 
 # Jupyter checkpoints
