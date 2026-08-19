@@ -3,8 +3,11 @@
 ## 🚀 Live Demo
 👉 [Try the Credit Risk Predictor](https://credit-risk-default-predictor.streamlit.app/)
 
+---
+
 ## Project Overview
-This project demonstrates an end-to-end Credit Risk Pipeline that moves beyond simple classification. It focuses on producing well-calibrated probabilities of default (PD) and translating them into actionable business risk buckets
+
+This project demonstrates an end-to-end credit risk pipeline that moves beyond simple classification. It combines probability calibration, risk-based decisioning, model explainability, and a production-style Streamlit + FastAPI application architecture.
 
 Rather than optimizing for accuracy alone, the project emphasizes **risk ranking, probability calibration, and explainability**, 
 closely mirroring how credit risk models are used in real financial institutions.
@@ -19,24 +22,6 @@ closely mirroring how credit risk models are used in real financial institutions
 
 ---
 
-## Key Results
-
-### ROC Curve 
-
-#### ROC Curve - Logistic Regression
-![ROC Curve](reports/figures/roc_disp.png)
-#### ROC Curve - XGBoost
-![ROC Curve XGB](reports/figures/roc_disp_xgb.png)
-
-### Global SHAP Feature Importance
-
-#### Feature Importance - Logistic Regression
-![SHAP](reports/figures/shap_feature_importance_bee.png)
-#### Feature Importance - XGBoost
-![SHAP](reports/figures/shap_xgb_feature_importance_bee.png)
-
----
-
 ## Dataset
 - **Source:** [Home Credit Default Risk Dataset – Kaggle](https://www.kaggle.com/c/home-credit-default-risk)
 - Raw dataset is not included in this repository due to size constraints.
@@ -47,6 +32,60 @@ closely mirroring how credit risk models are used in real financial institutions
   - Missing values
   - High-cardinality categorical features
   - Regulatory need for explainability
+
+### Note on src/ directory
+The `src/` directory contains modular versions of the pipeline functions. 
+Scripts are works in progress and the primary reproducible workflow 
+is through the numbered notebooks in `notebooks/`.
+
+---
+
+## Application Architecture
+
+The project consists of two components:
+
+### Streamlit Application
+
+Provides the user interface for entering applicant information
+and displaying predictions and model explanations.
+
+### FastAPI Inference API
+
+Handles model inference, metadata, and SHAP explanations.
+
+The Streamlit application communicates with the FastAPI service
+through HTTP endpoints.
+
+### API Endpoints
+
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/metadata` | GET | Returns valid categorical values for the application |
+| `/predict` | POST | Returns calibrated default probability and risk decision |
+| `/explain` | POST | Returns applicant-level SHAP contributions |
+
+### Request Flow
+
+```text
+Streamlit
+    │
+    ├── GET /metadata
+    │
+    ├── POST /predict
+    │
+    └── POST /explain
+             │
+             ▼
+        FastAPI API
+             │
+       ┌─────┴─────┐
+       │           │
+  Prediction    SHAP
+       │           │
+       ▼           ▼
+Calibrated     XGBoost
+XGBoost         model
+```
 
 ---
 
@@ -76,6 +115,8 @@ credit-risk-ml/
 │ ├── train_xgb.py
 │ └── explainability.py
 │
+├── utils/
+│   └── shap_plot.py
 │
 ├── models/
 │ ├── logreg_baseline.joblib
@@ -89,14 +130,10 @@ credit-risk-ml/
 │ └── figures/
 | └── summary_tables
 │
+├── app.py
 └── README.md
 └── requirements.txt
 ```
-
-### Note on src/ directory
-The `src/` directory contains modular versions of the pipeline functions. 
-Scripts are works in progress and the primary reproducible workflow 
-is through the numbered notebooks in `notebooks/`.
 
 ---
 
@@ -117,6 +154,8 @@ is through the numbered notebooks in `notebooks/`.
 - Evaluated using reliability curves, Expected Calibration Error (ECE) and Brier Score
 - Platt scaling and isotonic regression were evaluated on the validation set. XGBoost with Platt scaling provided the strongest combination of discrimination and probability calibration and was selected as the final model.
 - Applied sigmoid calibration with 5-fold CV to XGBoost, which improved probability alignment (↓ ECE , ↓ Brier Score) without degrading AUC.
+
+---
 
 ## Model Performance Summary
 
@@ -169,20 +208,31 @@ The project illustrates how model outputs directly influence lending decisions a
 
 #### Logistic Regression
 ![SHAP](reports/figures/shap_feature_importance.png)
+
 #### XGBoost
 ![SHAP](reports/figures/shap_xgb_feature_importance.png)
 
 SHAP (SHapley Additive exPlanations) is used to:
 - Identify global drivers of default risk
 - Explain individual applicant decisions
-- Support transparency and regulatory compliance
+- Support transparency in regulated lending environments
 
 Key outputs:
 - Global feature importance (mean absolute SHAP)
 - Individual applicant explanations
-- Quantification of each feature’s contribution to individual PD
+- Quantification of each feature’s contribution to the model score.
 - Consistency between SHAP risk drivers and domain expectations
-- Auditable explanation layer for regulatory transparency
+- Provide an auditable explanation layer for model transparency
+
+### Individual Applicant Explanations
+
+The FastAPI `/explain` endpoint generates applicant-level SHAP explanations
+using the underlying XGBoost model. The final probability shown to users is
+produced by the calibrated XGBoost model.
+
+SHAP values indicate whether each feature pushes the model toward higher or
+lower predicted risk. They are model-score contributions rather than
+percentage-point changes in the final calibrated probability.
 
 ---
 
@@ -203,22 +253,13 @@ Key outputs:
 
 ---
 
-## Author
-Built as a portfolio project to demonstrate **end-to-end applied data science**, bridging modeling, uncertainty, and business decision-making.
-
----
-
-## What This Project Demonstrates
-
-- Risk modeling beyond accuracy (ranking + calibration)
-- Business-aligned threshold optimization
-- Probability calibration for financial reliability
-- Model transparency using SHAP for interpretability
-- Translation of predictions into actionable credit policy
-
----
-
 ## Setup
 ```bash
 pip install -r requirements.txt
 ```
+
+---
+
+## Author
+Built as a portfolio project to demonstrate **end-to-end applied data science**, bridging modeling, uncertainty, and business decision-making.
+
