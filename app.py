@@ -12,7 +12,7 @@ from utils.shap_plot import plot_shap_waterfall
 # API URL
 API_URL = os.getenv(
     "API_URL",
-    "http://127.0.0.1:8000"
+    "https://credit-risk-api-312r.onrender.com"
 )
 
 # Get Matadata
@@ -56,7 +56,7 @@ with st.expander("Personal & Family", expanded=True):
         family_member_count = st.number_input("Family Members", 1, 30, 1)
 
 # Financial Section
-with st.expander("Financial Information", expanded=True):
+with st.expander("Financial Information", expanded=False):
     col1, col2 = st.columns(2)
 
     with col1:
@@ -68,7 +68,7 @@ with st.expander("Financial Information", expanded=True):
         goods_price = st.number_input("Amount to Be Financed", 0, 5000000, 500000)
 
 # Credit Profile
-with st.expander("Credit Profile", expanded=True):
+with st.expander("Credit Profile", expanded=False):
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -81,7 +81,7 @@ with st.expander("Credit Profile", expanded=True):
         ext_source_3 = st.slider("External Credit Score 3", 0.0, 1.0, 0.54)
 
 # Employment & Loan Details
-with st.expander("Employment & Loan", expanded=True):
+with st.expander("Employment & Loan", expanded=False):
     col1, col2 = st.columns(2)
 
     with col1:
@@ -94,7 +94,7 @@ with st.expander("Employment & Loan", expanded=True):
         contract_type = st.selectbox("Loan Type", loan_types)
 
 # Assets Details
-with st.expander("Assets", expanded=True):
+with st.expander("Assets", expanded=False):
     col1, col2 = st.columns(2)
 
     with col1:

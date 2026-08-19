@@ -1,7 +1,11 @@
 # Credit Risk Modeling with Probability Calibration, Risk Bucketing, and SHAP Explainability
 
 ## 🚀 Live Demo
+
 👉 [Try the Credit Risk Predictor](https://credit-risk-default-predictor.streamlit.app/)
+
+The application uses a deployed FastAPI inference service for
+real-time predictions and SHAP explanations.
 
 ---
 
@@ -18,7 +22,7 @@ closely mirroring how credit risk models are used in real financial institutions
 
 - Calibration: Reduced XGBoost ECE from approximately 0.253 to 0.0026 on the held-out test set using Platt scaling, while slightly improving ROC-AUC from 0.760 to 0.763.
 - Decisioning: Developed a 4-tier Risk Bucketing framework (Low to Very High) to automate lending decisions.
-- Explainability: SHAP provides global and applicant-level explanations that can support model transparency and reason-code generation.
+- Explanation layer supporting model transparency and auditability
 
 ---
 
@@ -51,18 +55,27 @@ and displaying predictions and model explanations.
 
 ### FastAPI Inference API
 
-Handles model inference, metadata, and SHAP explanations.
+Provides model inference, metadata, and SHAP explanation endpoints.
 
-The Streamlit application communicates with the FastAPI service
-through HTTP endpoints.
+The Streamlit frontend communicates with the FastAPI backend
+over HTTP.
+
+### Deployment
+
+- **Frontend:** Streamlit Community Cloud
+- **Backend:** Render
+- **API:** `https://credit-risk-api-312r.onrender.com`
 
 ### API Endpoints
 
-| Endpoint | Method | Purpose |
-|---|---|---|
-| `/metadata` | GET | Returns valid categorical values for the application |
-| `/predict` | POST | Returns calibrated default probability and risk decision |
-| `/explain` | POST | Returns applicant-level SHAP contributions |
+The FastAPI service exposes:
+
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /health` | Service health check |
+| `GET /metadata` | Provides categorical values used by the frontend |
+| `POST /predict` | Returns default probability and risk decision |
+| `POST /explain` | Returns SHAP-based model explanations |
 
 ### Request Flow
 
