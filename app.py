@@ -80,7 +80,7 @@ with st.expander("Credit Profile", expanded=True):
     with col3:
         ext_source_3 = st.slider("External Credit Score 3", 0.0, 1.0, 0.54)
 
-# Employement & Loan Details
+# Employment & Loan Details
 with st.expander("Employment & Loan", expanded=True):
     col1, col2 = st.columns(2)
 
