@@ -80,7 +80,7 @@ with st.expander("Credit Profile", expanded=True):
     with col3:
         ext_source_3 = st.slider("External Credit Score 3", 0.0, 1.0, 0.54)
 
-# Employement Details
+# Employement & Loan Details
 with st.expander("Employment & Loan", expanded=True):
     col1, col2 = st.columns(2)
 
@@ -294,8 +294,12 @@ if predict:
     st.subheader("Model Explanation")
     st.markdown(
         "The chart below shows the features that had the greatest influence "
-        "on this prediction. Positive SHAP values increase predicted risk, "
-        "while negative values decrease it."
+        "on the model's prediction. Positive SHAP values push the model "
+        "toward higher risk, while negative values push it toward lower risk."
+    )
+    st.caption(
+        "SHAP values represent each feature's contribution to the model score; "
+        "they are not percentage-point changes in default probability."
     )
 
     feature_names = explain_result["feature_names"]
