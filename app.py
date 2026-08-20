@@ -176,6 +176,7 @@ if predict:
         "Low": {
             "color": "#16a34a",
             "range": "< 5%",
+
         },
         "Medium": {
             "color": "#f59e0b",
@@ -239,55 +240,78 @@ if predict:
     )
 
     # Risk Gauge
-    st.caption(f"Default probability · {config['range']} = {bucket_name}")
-    st.markdown(
-        f"""
+    gauge_html = f"""
+    <div style="
+        position: relative;
+        height: 12px;
+        border-radius: 6px;
+        background: linear-gradient(
+            to right,
+            #16a34a 0%,
+            #16a34a 5%,
+            #f59e0b 5%,
+            #f59e0b 16%,
+            #f97316 16%,
+            #f97316 45%,
+            #dc2626 45%,
+            #dc2626 100%
+        );
+    ">
         <div style="
-            position: relative;
-            height: 12px;
-            border-radius: 6px;
-            background: linear-gradient(
-                to right,
-                #16a34a 0%,
-                #16a34a 5%,
-                #f59e0b 5%,
-                #f59e0b 16%,
-                #f97316 16%,
-                #f97316 45%,
-                #dc2626 45%,
-                #dc2626 100%
-            );
-        ">
-            <div style="
-                position: absolute;
-                left: {prob * 100}%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                width: 18px;
-                height: 18px;
-                background: white;
-                border: 3px solid {color};
-                border-radius: 50%;
-                box-shadow: 0 1px 4px rgba(0,0,0,0.4);
-            "></div>
-        </div>
+            position: absolute;
+            left: {prob * 100}%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 18px;
+            height: 18px;
+            background: white;
+            border: 3px solid {color};
+            border-radius: 50%;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+        "></div>
+    </div>
 
-        <div style="
-            display: flex;
-            justify-content: space-between;
-            margin-top: 6px;
-            color: #9ca3af;
-            font-size: 12px;
-        ">
-            <span>0%</span>
-            <span>5%</span>
-            <span>16%</span>
-            <span>45%</span>
-            <span>100%</span>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    <div style="
+        position: relative;
+        height: 20px;
+        margin-top: 6px;
+        color: #9ca3af;
+        font-size: 12px;
+    ">
+        <span style="
+            position: absolute;
+            left: 0%;
+        ">0%</span>
+
+        <span style="
+            position: absolute;
+            left: 5%;
+            transform: translateX(-50%);
+        ">5%</span>
+
+        <span style="
+            position: absolute;
+            left: 16%;
+            transform: translateX(-50%);
+        ">16%</span>
+
+        <span style="
+            position: absolute;
+            left: 45%;
+            transform: translateX(-50%);
+        ">45%</span>
+
+        <span style="
+            position: absolute;
+            left: 100%;
+            transform: translateX(-100%);
+        ">100%</span>
+    </div>
+    """
+
+    st.html(gauge_html)
+
+
 
     # SHAP
     st.markdown("---")
