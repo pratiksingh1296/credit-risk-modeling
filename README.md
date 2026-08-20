@@ -4,7 +4,7 @@
 
 👉 [Try the Credit Risk Predictor](https://credit-risk-default-predictor.streamlit.app/)
 
-The application uses a deployed FastAPI inference service for predictions and SHAP explanations.
+The application uses a deployed FastAPI inference service forgit predictions and SHAP explanations.
 
 ---
 
@@ -219,10 +219,10 @@ The project illustrates how model outputs directly influence lending decisions a
 ### Global Feature Importance
 
 #### Logistic Regression
-![SHAP](reports/figures/shap_feature_importance.png)
+![SHAP](reports/figures/shap_feature_importance_bee.png)
 
 #### XGBoost
-![SHAP](reports/figures/shap_xgb_feature_importance.png)
+![SHAP](reports/figures/shap_xgb_feature_importance_bee.png)
 
 SHAP (SHapley Additive exPlanations) is used to:
 - Identify global drivers of default risk
