@@ -4,8 +4,7 @@
 
 👉 [Try the Credit Risk Predictor](https://credit-risk-default-predictor.streamlit.app/)
 
-The application uses a deployed FastAPI inference service for
-real-time predictions and SHAP explanations.
+The application uses a deployed FastAPI inference service for predictions and SHAP explanations.
 
 ---
 
